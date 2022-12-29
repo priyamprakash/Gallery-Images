@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import android.widget.ImageSwitcher
+import android.widget.ImageView
 
 class MainActivity : AppCompatActivity() {
     private var images: ArrayList<Uri?>? = null
@@ -23,6 +24,17 @@ class MainActivity : AppCompatActivity() {
 
         images = ArrayList()
 
+        imageSwitcher.setFactory {
+            ImageView(applicationContext)
+        }
+        pick.setOnClickListener {
 
+        }
+        next.setOnClickListener {
+
+        }
+        previous.setOnClickListener {
+
+        }
     }
 }
