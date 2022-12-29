@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.ImageSwitcher
 import android.widget.ImageView
+import android.widget.Toast
 
 class MainActivity : AppCompatActivity() {
     private var position = 0
@@ -33,37 +34,59 @@ class MainActivity : AppCompatActivity() {
             ImageView(applicationContext)
         }
         pick.setOnClickListener {
-
+            pickImagesIntent()
         }
         next.setOnClickListener {
-
+            if (position < images!!.size - 1) {
+                position++
+                imageSwitcher.setImageURI(images!![position])
+            } else {
+                Toast.makeText(this, "No More IMages to show", Toast.LENGTH_SHORT).show()
+            }
         }
         previous.setOnClickListener {
-
+            if (position > 0) {
+                position--
+                imageSwitcher.setImageURI(images!![position])
+            } else {
+                Toast.makeText(this, "No More IMages to show", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 
-    private fun pickImagesIntent(){
+    private fun pickImagesIntent() {
         val intent = Intent()
         intent.type = "image/*"
-        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE,true)
+        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
         intent.action = Intent.ACTION_GET_CONTENT
-        startActivityForResult(Intent.createChooser(intent, "Select image(s)"),PICK_IMAGES_CODE)
+        startActivityForResult(Intent.createChooser(intent, "Select image(s)"), PICK_IMAGES_CODE)
 
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        if(requestCode == PICK_IMAGES_CODE){
-          if(resultCode == Activity.RESULT_OK){
-              if(data!!.clipData != null){
-                  //picked multiple images
-              }
-              else{
-                  //picked single images
-              }
-          }
+        if (requestCode == PICK_IMAGES_CODE) {
+            if (resultCode == Activity.RESULT_OK) {
+                if (data!!.clipData != null) {
+                    //picked multiple images
+                    val count = data.clipData!!.itemCount
+                    for (i in 0 until count) {
+                        val imageUri = data.clipData!!.getItemAt(i).uri
+                        images!!.add(imageUri)
+
+                    }
+                    //first image to switcher
+                    imageSwitcher.setImageURI(this!!.images!![0])
+                    position = 0
+                } else {
+                    //picked single images
+                    val imageUri = data.data
+                    imageSwitcher.setImageURI(imageUri)
+                    position = 0
+
+                }
+            }
         }
     }
 
