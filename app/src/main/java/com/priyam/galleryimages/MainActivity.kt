@@ -41,7 +41,7 @@ class MainActivity : AppCompatActivity() {
                 position++
                 imageSwitcher.setImageURI(images!![position])
             } else {
-                Toast.makeText(this, "No More IMages to show", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "No More Images to show", Toast.LENGTH_SHORT).show()
             }
         }
         previous.setOnClickListener {
@@ -49,7 +49,7 @@ class MainActivity : AppCompatActivity() {
                 position--
                 imageSwitcher.setImageURI(images!![position])
             } else {
-                Toast.makeText(this, "No More IMages to show", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "No More Images to show", Toast.LENGTH_SHORT).show()
             }
         }
     }

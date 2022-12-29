@@ -8,8 +8,10 @@
 
     <ImageSwitcher
         android:id="@+id/imageSwitcher"
-        android:layout_width="wrap_content"
-        android:layout_height="500dp"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:background="#FFC107"
+
         />
 
     <Button
@@ -32,6 +34,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Pick Image"
+        android:paddingBottom="20dp"
         android:layout_alignParentBottom="true"
 
         />
