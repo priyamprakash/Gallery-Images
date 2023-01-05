@@ -1,5 +1,6 @@
 package com.priyam.galleryimages
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.ContentValues.TAG
 import android.content.Intent
@@ -7,11 +8,9 @@ import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.Button
-import android.widget.ImageSwitcher
 import android.widget.ImageView
-import android.widget.TextView
-import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
@@ -21,57 +20,38 @@ class MainActivity : AppCompatActivity() {
 
     var images: ArrayList<Uri?>? = null
     private lateinit var next: Button
-    private lateinit var previous: Button
+    private lateinit var img: ImageView
     private lateinit var pick: Button
-    private lateinit var messageText: TextView
-    private lateinit var imageSwitcher: ImageSwitcher
     private lateinit var imageRecyclerView: RecyclerView
     private lateinit var adapter: ImageAdapter
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        next = findViewById(R.id.nextButton)
-        previous = findViewById(R.id.previousButton)
+
         pick = findViewById(R.id.pickImage)
-        messageText = findViewById(R.id.message_text)
-        imageSwitcher = findViewById(R.id.imageSwitcher)
+        img = findViewById(R.id.image_view)
 
         images = ArrayList()
+        images!!.clear()
 
-        imageSwitcher.setFactory {
-            ImageView(applicationContext)
-        }
+
         pick.setOnClickListener {
             pickImagesIntent()
         }
-        next.setOnClickListener {
-            if (position < images!!.size - 1) {
-                position++
-                imageSwitcher.setImageURI(images!![position])
-            } else {
-                Toast.makeText(this, "No More Images to show", Toast.LENGTH_SHORT).show()
-            }
-        }
-        previous.setOnClickListener {
-            if (position > 0) {
-                position--
-                imageSwitcher.setImageURI(images!![position])
-            } else {
-                Toast.makeText(this, "No More Images to show", Toast.LENGTH_SHORT).show()
-            }
-        }
+
 
     }
 
     private fun setUpRecyclerView(images: ArrayList<Uri?>?) {
         imageRecyclerView = findViewById(R.id.image_recycler_view)
-        adapter = ImageAdapter(applicationContext, this.images)
+        adapter = ImageAdapter(applicationContext, images)
         imageRecyclerView.adapter = adapter
         imageRecyclerView.layoutManager =
             LinearLayoutManager(applicationContext, LinearLayoutManager.VERTICAL, false)
-        Log.d(TAG, "setUpRecyclerView: ${this.images}")
+        Log.d(TAG, "setUpRecyclerView: $images")
         adapter.setData(this.images)
 
     }
@@ -91,6 +71,7 @@ class MainActivity : AppCompatActivity() {
 
         if (requestCode == PICK_IMAGES_CODE) {
             if (resultCode == Activity.RESULT_OK) {
+                img.visibility = View.GONE
                 if (data!!.clipData != null) {
                     //picked multiple images
                     val count = data.clipData!!.itemCount
@@ -100,12 +81,11 @@ class MainActivity : AppCompatActivity() {
 
                     }
                     //first image to switcher
-                    imageSwitcher.setImageURI(this.images!![0])
+
                     position = 0
                 } else {
                     //picked single images
                     val imageUri = data.data
-                    imageSwitcher.setImageURI(imageUri)
                     position = 0
                     images!!.add(imageUri)
 
